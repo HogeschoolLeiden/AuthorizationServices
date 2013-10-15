@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
   <persistence-unit name="aut.hsleiden.nl" transaction-type="RESOURCE_LOCAL">
+      <non-jta-data-source>java:comp/env/jdbc/aut</non-jta-data-source>
       <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <non-jta-data-source>java:comp/env/jdbc/aut</non-jta-data-source>
-    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>nl.hsleiden.authorizationservices.model.Authorizationcode</class>
-    <class>nl.hsleiden.authorizationservices.model.Client</class>
-    <class>nl.hsleiden.authorizationservices.model.AccessToken</class>
-    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+      <class>nl.hsleiden.authorizationservices.model.Authorizationcode</class>
+      <class>nl.hsleiden.authorizationservices.model.Client</class>
+      <class>nl.hsleiden.authorizationservices.model.AccessToken</class>
+      <exclude-unlisted-classes>true</exclude-unlisted-classes>
   </persistence-unit>
 </persistence>

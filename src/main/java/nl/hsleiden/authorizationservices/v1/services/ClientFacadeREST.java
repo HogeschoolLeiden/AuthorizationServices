@@ -17,12 +17,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import nl.hsleiden.authorizationservices.model.Client;
 import org.apache.log4j.Logger;
+import org.apache.oltu.oauth2.as.issuer.MD5Generator;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 /**
  *
  * @author hl
  */
-@Path("v1/client")
+@Path("client")
 public class ClientFacadeREST extends AbstractFacade<Client> {
     
     private EntityManagerFactory emf;
@@ -40,23 +42,26 @@ public class ClientFacadeREST extends AbstractFacade<Client> {
     }
 
     @GET
-    @Path("/register")
     @Produces({"application/xml", "application/json"})
-    public Client create(@QueryParam("id") String userId, @QueryParam("uri") String reDirectURI)  {
+    public Client create(@QueryParam("id") String userId, @QueryParam("uri") String reDirectURI) throws OAuthSystemException  {
         
         
-        //MD5Generator generator = new MD5Generator();
+        MD5Generator generator = new MD5Generator();
         
-        Client c = new Client(userId);
+        Client c = new Client(generator.generateValue(userId));
         c.setClientsecret(userId);
         c.setUserid(userId);
         c.setCreationdate(Calendar.getInstance().getTime());
         c.setExpires(null);
-        c.setRedirecturi(userId);
+        c.setRedirecturi(userId + "@hsleiden.nl");
         logger.debug("userid: " + userId);
         logger.debug("generated clientid: " + c.getClientid());
         EntityManager em = getEntityManager();
+        
+        em.getTransaction().begin();
         em.persist(c);
+        em.getTransaction().commit();
+        em.close();
         
         return c;
         //super.create(entity);

@@ -27,14 +27,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "clients")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Clients.findAll", query = "SELECT c FROM Clients c"),
-    @NamedQuery(name = "Clients.findByClientid", query = "SELECT c FROM Clients c WHERE c.clientid = :clientid"),
-    @NamedQuery(name = "Clients.findByClientsecret", query = "SELECT c FROM Clients c WHERE c.clientsecret = :clientsecret"),
-    @NamedQuery(name = "Clients.findByRedirecturi", query = "SELECT c FROM Clients c WHERE c.redirecturi = :redirecturi"),
-    @NamedQuery(name = "Clients.findByCreationdate", query = "SELECT c FROM Clients c WHERE c.creationdate = :creationdate"),
-    @NamedQuery(name = "Clients.findByExpires", query = "SELECT c FROM Clients c WHERE c.expires = :expires"),
-    @NamedQuery(name = "Clients.findByUserid", query = "SELECT c FROM Clients c WHERE c.userid = :userid"),
-    @NamedQuery(name = "Clients.findByCreationsdate", query = "SELECT c FROM Clients c WHERE c.creationsdate = :creationsdate")})
+    @NamedQuery(name = "Client.findAll", query = "SELECT c FROM Client c"),
+    @NamedQuery(name = "Client.findByClientid", query = "SELECT c FROM Client c WHERE c.clientid = :clientid"),
+    @NamedQuery(name = "Client.findByClientsecret", query = "SELECT c FROM Client c WHERE c.clientsecret = :clientsecret"),
+    @NamedQuery(name = "Client.findByRedirecturi", query = "SELECT c FROM Client c WHERE c.redirecturi = :redirecturi"),
+    @NamedQuery(name = "Client.findByCreationdate", query = "SELECT c FROM Client c WHERE c.creationdate = :creationdate"),
+    @NamedQuery(name = "Client.findByExpires", query = "SELECT c FROM Client c WHERE c.expires = :expires"),
+    @NamedQuery(name = "Client.findByUserid", query = "SELECT c FROM Client c WHERE c.userid = :userid"),
+    })
 public class Client implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

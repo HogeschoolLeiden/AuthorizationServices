@@ -27,14 +27,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "access_tokens")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "AccessTokens.findAll", query = "SELECT a FROM AccessTokens a"),
-    @NamedQuery(name = "AccessTokens.findByAccesstoken", query = "SELECT a FROM AccessTokens a WHERE a.accesstoken = :accesstoken"),
-    @NamedQuery(name = "AccessTokens.findByClientid", query = "SELECT a FROM AccessTokens a WHERE a.clientid = :clientid"),
-    @NamedQuery(name = "AccessTokens.findByUserid", query = "SELECT a FROM AccessTokens a WHERE a.userid = :userid"),
-    @NamedQuery(name = "AccessTokens.findByOrganisation", query = "SELECT a FROM AccessTokens a WHERE a.organisation = :organisation"),
-    @NamedQuery(name = "AccessTokens.findByExpires", query = "SELECT a FROM AccessTokens a WHERE a.expires = :expires"),
-    @NamedQuery(name = "AccessTokens.findByScope", query = "SELECT a FROM AccessTokens a WHERE a.scope = :scope"),
-    @NamedQuery(name = "AccessTokens.findByCreationdate", query = "SELECT a FROM AccessTokens a WHERE a.creationdate = :creationdate")})
+    @NamedQuery(name = "AccessToken.findAll", query = "SELECT a FROM AccessToken a"),
+    @NamedQuery(name = "AccessToken.findByAccesstoken", query = "SELECT a FROM AccessToken a WHERE a.accesstoken = :accesstoken"),
+    @NamedQuery(name = "AccessToken.findByClientid", query = "SELECT a FROM AccessToken a WHERE a.clientid = :clientid"),
+    @NamedQuery(name = "AccessToken.findByUserid", query = "SELECT a FROM AccessToken a WHERE a.userid = :userid"),
+    @NamedQuery(name = "AccessToken.findByOrganisation", query = "SELECT a FROM AccessToken a WHERE a.organisation = :organisation"),
+    @NamedQuery(name = "AccessToken.findByExpires", query = "SELECT a FROM AccessToken a WHERE a.expires = :expires"),
+    @NamedQuery(name = "AccessToken.findByScope", query = "SELECT a FROM AccessToken a WHERE a.scope = :scope"),
+    @NamedQuery(name = "AccessToken.findByCreationdate", query = "SELECT a FROM AccessToken a WHERE a.creationdate = :creationdate")})
 public class AccessToken implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

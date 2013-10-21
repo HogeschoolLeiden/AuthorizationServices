@@ -4,7 +4,7 @@
       <non-jta-data-source>java:comp/env/jdbc/aut</non-jta-data-source>
       <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
       <class>nl.hsleiden.authorizationservices.model.Authorizationcode</class>
-      <class>nl.hsleiden.authorizationservices.model.Client</class>
+      <class>nl.hsleiden.authorizationservices.model.OauthClient</class>
       <class>nl.hsleiden.authorizationservices.model.AccessToken</class>
       <exclude-unlisted-classes>true</exclude-unlisted-classes>
   </persistence-unit>

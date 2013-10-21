@@ -4,6 +4,8 @@
  */
 package nl.hsleiden.authorizationservices.application;
 
+import nl.hsleiden.authorizationservices.util.ObjectMapperProvider;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 /**
@@ -13,9 +15,9 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class AuthorizationApplication extends ResourceConfig {
     public AuthorizationApplication() {
         packages("nl.hsleiden.authorizationservices.v1.services");
-        //packages("org.glassfish.jersey.examples.jackson");
-        //register(ObjectMapperProvider.class);
-        //register(JacksonFeature.class);
+        packages("org.glassfish.jersey.examples.jackson");
+        register(ObjectMapperProvider.class);
+        register(JacksonFeature.class);
     }
 }    
 

@@ -27,15 +27,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "clients")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Client.findAll", query = "SELECT c FROM Client c"),
-    @NamedQuery(name = "Client.findByClientid", query = "SELECT c FROM Client c WHERE c.clientid = :clientid"),
-    @NamedQuery(name = "Client.findByClientsecret", query = "SELECT c FROM Client c WHERE c.clientsecret = :clientsecret"),
-    @NamedQuery(name = "Client.findByRedirecturi", query = "SELECT c FROM Client c WHERE c.redirecturi = :redirecturi"),
-    @NamedQuery(name = "Client.findByCreationdate", query = "SELECT c FROM Client c WHERE c.creationdate = :creationdate"),
-    @NamedQuery(name = "Client.findByExpires", query = "SELECT c FROM Client c WHERE c.expires = :expires"),
-    @NamedQuery(name = "Client.findByUserid", query = "SELECT c FROM Client c WHERE c.userid = :userid"),
+    @NamedQuery(name = "OauthClient.findAll", query = "SELECT c FROM OauthClient c"),
+    @NamedQuery(name = "OauthClient.findByClientid", query = "SELECT c FROM OauthClient c WHERE c.clientid = :clientid"),
+    @NamedQuery(name = "OauthClient.findByClientsecret", query = "SELECT c FROM OauthClient c WHERE c.clientsecret = :clientsecret"),
+    @NamedQuery(name = "OauthClient.findByRedirecturi", query = "SELECT c FROM OauthClient c WHERE c.redirecturi = :redirecturi"),
+    @NamedQuery(name = "OauthClient.findByCreationdate", query = "SELECT c FROM OauthClient c WHERE c.creationdate = :creationdate"),
+    @NamedQuery(name = "OauthClient.findByExpires", query = "SELECT c FROM OauthClient c WHERE c.expires = :expires"),
+    @NamedQuery(name = "OauthClient.findByUserid", query = "SELECT c FROM OauthClient c WHERE c.userid = :userid"),
     })
-public class Client implements Serializable {
+public class OauthClient implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -60,10 +60,10 @@ public class Client implements Serializable {
     private String userid;
     
 
-    public Client() {
+    public OauthClient() {
     }
 
-    public Client(String clientid) {
+    public OauthClient(String clientid) {
         this.clientid = clientid;
     }
 
@@ -125,10 +125,10 @@ public class Client implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Client)) {
+        if (!(object instanceof OauthClient)) {
             return false;
         }
-        Client other = (Client) object;
+        OauthClient other = (OauthClient) object;
         if ((this.clientid == null && other.clientid != null) || (this.clientid != null && !this.clientid.equals(other.clientid))) {
             return false;
         }

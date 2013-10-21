@@ -6,6 +6,7 @@ package nl.hsleiden.authorizationservices.v1.services;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.ws.rs.core.Response;
 
 /**
  *

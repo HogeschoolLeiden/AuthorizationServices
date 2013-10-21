@@ -18,6 +18,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import nl.hsleiden.authorizationservices.util.DateFormatterAdapter;
 
 /**
  *
@@ -91,6 +93,7 @@ public class OauthClient implements Serializable {
         this.redirecturi = redirecturi;
     }
 
+    @XmlJavaTypeAdapter( DateFormatterAdapter.class)
     public Date getCreationdate() {
         return creationdate;
     }

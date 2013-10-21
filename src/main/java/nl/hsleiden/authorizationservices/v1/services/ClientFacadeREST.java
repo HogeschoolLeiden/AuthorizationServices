@@ -4,7 +4,11 @@
  */
 package nl.hsleiden.authorizationservices.v1.services;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import javax.persistence.EntityManager;
@@ -55,6 +59,7 @@ public class ClientFacadeREST extends AbstractFacade<OauthClient>{
         
         
         entity.setCreationdate(Calendar.getInstance().getTime());
+        
         entity.setExpires(null);
         entity.setUserid("moet uit saml komen");
         logger.debug("userid: " + entity.getUserid());

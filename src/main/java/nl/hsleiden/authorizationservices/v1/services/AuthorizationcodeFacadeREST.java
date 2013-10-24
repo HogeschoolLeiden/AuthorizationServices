@@ -32,27 +32,14 @@ public class AuthorizationcodeFacadeREST extends AbstractFacade<Authorizationcod
 
     @POST
     @Override
-    @Consumes({"application/xml", "application/json"})
+    @Consumes({"application/json"})
     public void create(Authorizationcode entity) {
         super.create(entity);
     }
 
-//    @PUT
-//    @Override
-//    @Consumes({"application/xml", "application/json"})
-//    public void edit(Authorizationcode entity) {
-//        super.edit(entity);
-//    }
-//
-//    @DELETE
-//    @Path("{id}")
-//    public void remove(@PathParam("id") String id) {
-//        super.remove(super.find(id));
-//    }
-
     @GET
     @Path("{id}")
-    @Produces({"application/xml", "application/json"})
+    @Produces({"application/json"})
     public Authorizationcode find(@PathParam("id") String id) {
         return super.find(id);
     }

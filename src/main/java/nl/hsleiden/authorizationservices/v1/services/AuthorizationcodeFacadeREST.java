@@ -4,66 +4,85 @@
  */
 package nl.hsleiden.authorizationservices.v1.services;
 
-import java.util.List;
+import java.util.Calendar;
+import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
-import javax.ws.rs.Consumes;
+import javax.persistence.Query;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import nl.hsleiden.authorizationservices.model.Authorizationcode;
+import nl.hsleiden.authorizationservices.model.OauthClient;
 import org.apache.log4j.Logger;
+import org.apache.oltu.oauth2.as.issuer.MD5Generator;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 /**
  *
  * @author hl
  */
-@Path("v1/authorizationcode")
+@Path("authorize")
 public class AuthorizationcodeFacadeREST extends AbstractFacade<Authorizationcode> {
     private EntityManagerFactory emf;
-    private Logger logger = Logger.getLogger(ClientFacadeREST.class.getName());
+    private Logger logger = Logger.getLogger(AuthorizationcodeFacadeREST.class.getName());
 
     public AuthorizationcodeFacadeREST() {
         super(Authorizationcode.class);
     }
 
-    @POST
-    @Override
-    @Consumes({"application/json"})
-    public void create(Authorizationcode entity) {
-        super.create(entity);
-    }
-
     @GET
-    @Path("{id}")
     @Produces({"application/json"})
-    public Authorizationcode find(@PathParam("id") String id) {
-        return super.find(id);
+    public Authorizationcode find(@QueryParam("clientid") String clientId, @QueryParam("uid") String uid, @QueryParam("organisation") String organisation) {
+        
+        validateClient(clientId);
+        Authorizationcode code = new Authorizationcode();
+        
+        Calendar now = Calendar.getInstance();
+        code.setClientid(clientId);
+        code.setUserid(uid);
+        code.setOrganisation(organisation);
+        code.setCreationdate(now.getTime());
+        
+        MD5Generator generator = new MD5Generator();
+        try {
+            String encryptedId = generator.generateValue(uid + now.getTime());
+            code.setAuthorizationcode(encryptedId);
+        } catch (OAuthSystemException ex) {
+            java.util.logging.Logger.getLogger(AuthorizationcodeFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        now.add(Calendar.MINUTE, 5);
+        code.setExpires(now.getTime());
+        code.setRedirecturi("");
+        code.setScope("");
+        EntityManager em = getEntityManager();
+        em.getTransaction().begin();
+        em.persist(code);
+        em.getTransaction().commit();
+        em.close();
+        return code;
     }
 
-    @GET
-    @Override
-    @Produces({"application/xml", "application/json"})
-    public List<Authorizationcode> findAll() {
-        return super.findAll();
+    private boolean validateClient(String clientId){
+        boolean valid = false;
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("OauthClient.findByClientid").setParameter("clientid", clientId);
+        //OauthClient client = (OauthClient)query.getSingleResult();
+        try {
+            query.getSingleResult();
+            logger.debug("Er is een client gevonden.");
+            valid = true;
+        } catch (NoResultException nre) {
+            throw new WebApplicationException("No valid client", Response.Status.FORBIDDEN);
+        }
+        return valid;
     }
-
-    @GET
-    @Path("{from}/{to}")
-    @Produces({"application/xml", "application/json"})
-    public List<Authorizationcode> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        return super.findRange(new int[]{from, to});
-    }
-
-    @GET
-    @Path("count")
-    @Produces("text/plain")
-    public String countREST() {
-        return String.valueOf(super.count());
-    }
+    
 
     @Override
     protected EntityManager getEntityManager() {

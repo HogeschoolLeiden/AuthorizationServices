@@ -5,7 +5,6 @@
 package nl.hsleiden.authorizationservices.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;

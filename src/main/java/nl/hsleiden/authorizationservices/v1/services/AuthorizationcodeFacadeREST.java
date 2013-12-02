@@ -13,12 +13,11 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import nl.hsleiden.authorizationservices.model.Authorizationcode;
-import nl.hsleiden.authorizationservices.model.OauthClient;
 import org.apache.log4j.Logger;
 import org.apache.oltu.oauth2.as.issuer.MD5Generator;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
@@ -37,16 +36,17 @@ public class AuthorizationcodeFacadeREST extends AbstractFacade<Authorizationcod
     }
 
     @GET
+    @Path ("{clientid}")
     @Produces({"application/json"})
-    public Authorizationcode find(@QueryParam("clientid") String clientId, @QueryParam("uid") String uid, @QueryParam("organisation") String organisation) {
+    public Authorizationcode find(@PathParam("clientid") String clientId) {
         
         validateClient(clientId);
         Authorizationcode code = new Authorizationcode();
-        
+        String uid = "Jacqueline";
         Calendar now = Calendar.getInstance();
         code.setClientid(clientId);
         code.setUserid(uid);
-        code.setOrganisation(organisation);
+        code.setOrganisation("hsleiden.nl");
         code.setCreationdate(now.getTime());
         
         MD5Generator generator = new MD5Generator();

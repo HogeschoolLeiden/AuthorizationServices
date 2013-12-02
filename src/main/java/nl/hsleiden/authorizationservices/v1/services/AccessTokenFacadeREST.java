@@ -8,7 +8,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -20,7 +19,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import nl.hsleiden.authorizationservices.model.AccessToken;
@@ -71,7 +69,7 @@ public class AccessTokenFacadeREST extends AbstractFacade<AccessToken> {
 
     @GET
     @Produces({"application/json"})
-    public AccessToken find(@QueryParam("authorizationcode") String authorizationcode) {
+    public AccessToken find(@PathParam("authorizationcode") String authorizationcode) {
         EntityManager em = getEntityManager();
         Query query = em.createNamedQuery("Authorizationcode.findByAuthorizationcode").setParameter("authorizationcode", authorizationcode);
         Authorizationcode code = (Authorizationcode)query.getSingleResult();

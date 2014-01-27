@@ -7,17 +7,31 @@
             <param-name>javax.ws.rs.Application</param-name>
             <param-value>nl.hsleiden.authorizationservices.application.AuthorizationApplication</param-value>
         </init-param>
-       
         <load-on-startup>1</load-on-startup>
-     </servlet>
-     <session-config>
-            <session-timeout>
+    </servlet>
+    <servlet>
+        <servlet-name>AuthorizeAfterConsent</servlet-name>
+        <servlet-class>nl.hsleiden.authorizationservices.servlet.consent.AuthorizeAfterConsent</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Consent</servlet-name>
+        <url-pattern>/Consent</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AuthorizeAfterConsent</servlet-name>
+        <url-pattern>/AuthorizeAfterConsent</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
                 1
             </session-timeout>
-        </session-config>
-     <servlet-mapping>
-            <servlet-name>Jersey Servlet</servlet-name>
-            <url-pattern>/v1/*</url-pattern>
-     </servlet-mapping>
-    
+    </session-config>
+    <servlet>
+        <servlet-name>Consent</servlet-name>
+        <servlet-class>nl.hsleiden.authorizationservices.servlet.consent.Consent</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Jersey Servlet</servlet-name>
+        <url-pattern>/v1/*</url-pattern>
+    </servlet-mapping>
 </web-app>

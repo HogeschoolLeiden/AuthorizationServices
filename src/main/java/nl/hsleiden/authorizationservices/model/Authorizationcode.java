@@ -63,7 +63,9 @@ public class Authorizationcode implements Serializable {
     @Column(name = "creationdate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationdate;
-
+    @Column(name = "state")
+    private String state;
+    
     public Authorizationcode() {
     }
 
@@ -135,6 +137,16 @@ public class Authorizationcode implements Serializable {
     public void setCreationdate(Date creationdate) {
         this.creationdate = creationdate;
     }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+    
+    
 
     @Override
     public int hashCode() {

@@ -68,6 +68,7 @@ public class AccessTokenFacadeREST extends AbstractFacade<AccessToken> {
     }
 
     @GET
+    @Path ("{authorizationcode}")
     @Produces({"application/json"})
     public AccessToken find(@PathParam("authorizationcode") String authorizationcode) {
         EntityManager em = getEntityManager();

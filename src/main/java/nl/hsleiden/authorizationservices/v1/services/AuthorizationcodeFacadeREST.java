@@ -4,6 +4,7 @@
  */
 package nl.hsleiden.authorizationservices.v1.services;
 
+import java.net.URI;
 import java.util.Calendar;
 import java.util.logging.Level;
 import javax.persistence.EntityManager;
@@ -15,8 +16,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import nl.hsleiden.authorizationservices.model.Authorizationcode;
 import org.apache.log4j.Logger;
 import org.apache.oltu.oauth2.as.issuer.MD5Generator;
@@ -36,18 +39,21 @@ public class AuthorizationcodeFacadeREST extends AbstractFacade<Authorizationcod
     }
 
     @GET
-    @Path ("{clientid}")
+    //@Path ("{clientid}")
     @Produces({"application/json"})
-    public Authorizationcode find(@PathParam("clientid") String clientId) {
+    public Response find(@QueryParam("clientid") String clientid, @QueryParam("state") String state, @QueryParam("scope") String scope) {
         
-        validateClient(clientId);
+        logger.debug("ClientId: " + clientid );
+        validateClient(clientid);
         Authorizationcode code = new Authorizationcode();
         String uid = "Jacqueline";
         Calendar now = Calendar.getInstance();
-        code.setClientid(clientId);
+        code.setClientid(clientid);
         code.setUserid(uid);
         code.setOrganisation("hsleiden.nl");
         code.setCreationdate(now.getTime());
+        code.setState(state);
+        //code.setRedirecturi("http://localhost:8080/AuthorizationServices/Consent");
         
         MD5Generator generator = new MD5Generator();
         try {
@@ -58,14 +64,20 @@ public class AuthorizationcodeFacadeREST extends AbstractFacade<Authorizationcod
         }
         now.add(Calendar.MINUTE, 5);
         code.setExpires(now.getTime());
-        code.setRedirecturi("");
+        code.setRedirecturi("http://localhost:8080/WebapisClient/Employee");
         code.setScope("");
+        
         EntityManager em = getEntityManager();
         em.getTransaction().begin();
         em.persist(code);
         em.getTransaction().commit();
         em.close();
-        return code;
+        
+        URI uri = URI.create(code.getRedirecturi());
+        URI newUri = UriBuilder.fromUri(uri).queryParam("state", code.getState()).queryParam("code", code.getAuthorizationcode()).build();
+        logger.debug("Hier gaan we naar toe: " + newUri);
+        return Response.seeOther(newUri).build();
+        //return code;
     }
 
     private boolean validateClient(String clientId){

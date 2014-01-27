@@ -28,11 +28,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "AccessToken.findAll", query = "SELECT a FROM AccessToken a"),
-    @NamedQuery(name = "AccessToken.findByAccesstoken", query = "SELECT a FROM AccessToken a WHERE a.accesstoken = :accesstoken"),
+    @NamedQuery(name = "AccessToken.findByAccesstoken", query = "SELECT a FROM AccessToken a WHERE a.access_token = :access_token"),
     @NamedQuery(name = "AccessToken.findByClientid", query = "SELECT a FROM AccessToken a WHERE a.clientid = :clientid"),
     @NamedQuery(name = "AccessToken.findByUserid", query = "SELECT a FROM AccessToken a WHERE a.userid = :userid"),
     @NamedQuery(name = "AccessToken.findByOrganisation", query = "SELECT a FROM AccessToken a WHERE a.organisation = :organisation"),
-    @NamedQuery(name = "AccessToken.findByExpires", query = "SELECT a FROM AccessToken a WHERE a.expires = :expires"),
+    @NamedQuery(name = "AccessToken.findByExpires", query = "SELECT a FROM AccessToken a WHERE a.expires_in = :expires_in"),
     @NamedQuery(name = "AccessToken.findByScope", query = "SELECT a FROM AccessToken a WHERE a.scope = :scope"),
     @NamedQuery(name = "AccessToken.findByCreationdate", query = "SELECT a FROM AccessToken a WHERE a.creationdate = :creationdate")})
 public class AccessToken implements Serializable {
@@ -42,7 +42,7 @@ public class AccessToken implements Serializable {
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "accesstoken")
-    private String accesstoken;
+    private String access_token;
     @Size(max = 2147483647)
     @Column(name = "clientid")
     private String clientid;
@@ -54,7 +54,7 @@ public class AccessToken implements Serializable {
     private String organisation;
     @Column(name = "expires")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date expires;
+    private Date expires_in;
     @Size(max = 2147483647)
     @Column(name = "scope")
     private String scope;
@@ -66,15 +66,15 @@ public class AccessToken implements Serializable {
     }
 
     public AccessToken(String accesstoken) {
-        this.accesstoken = accesstoken;
+        this.access_token = accesstoken;
     }
 
-    public String getAccesstoken() {
-        return accesstoken;
+    public String getAccess_token() {
+        return access_token;
     }
 
-    public void setAccesstoken(String accesstoken) {
-        this.accesstoken = accesstoken;
+    public void setAccess_token(String access_token) {
+        this.access_token = access_token;
     }
 
     public String getClientid() {
@@ -101,12 +101,12 @@ public class AccessToken implements Serializable {
         this.organisation = organisation;
     }
 
-    public Date getExpires() {
-        return expires;
+    public Date getExpires_in() {
+        return expires_in;
     }
 
-    public void setExpires(Date expires) {
-        this.expires = expires;
+    public void setExpires_in(Date expires_in) {
+        this.expires_in = expires_in;
     }
 
     public String getScope() {
@@ -128,7 +128,7 @@ public class AccessToken implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (accesstoken != null ? accesstoken.hashCode() : 0);
+        hash += (access_token != null ? access_token.hashCode() : 0);
         return hash;
     }
 
@@ -139,7 +139,7 @@ public class AccessToken implements Serializable {
             return false;
         }
         AccessToken other = (AccessToken) object;
-        if ((this.accesstoken == null && other.accesstoken != null) || (this.accesstoken != null && !this.accesstoken.equals(other.accesstoken))) {
+        if ((this.access_token == null && other.access_token != null) || (this.access_token != null && !this.access_token.equals(other.access_token))) {
             return false;
         }
         return true;
@@ -147,7 +147,7 @@ public class AccessToken implements Serializable {
 
     @Override
     public String toString() {
-        return "nl.hsleiden.authorizationservices.model.AccessTokens[ accesstoken=" + accesstoken + " ]";
+        return "nl.hsleiden.authorizationservices.model.AccessTokens[ accesstoken=" + access_token + " ]";
     }
     
 }

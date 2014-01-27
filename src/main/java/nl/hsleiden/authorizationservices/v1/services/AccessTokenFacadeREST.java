@@ -15,10 +15,13 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import nl.hsleiden.authorizationservices.model.AccessToken;
@@ -53,7 +56,7 @@ public class AccessTokenFacadeREST extends AbstractFacade<AccessToken> {
         AccessToken at = super.find(id);
         
         boolean b = false;
-        Date date = at.getExpires();
+        Date date = at.getExpires_in();
         Date d = Calendar.getInstance().getTime();
 
         if (date.compareTo(d) >= 0) {
@@ -67,14 +70,17 @@ public class AccessTokenFacadeREST extends AbstractFacade<AccessToken> {
         }
     }
 
-    @GET
-    @Path ("{authorizationcode}")
+    @POST
     @Produces({"application/json"})
-    public AccessToken find(@PathParam("authorizationcode") String authorizationcode) {
+    public AccessToken find(@FormParam("code") String code, @FormParam("client_id") String client_id, @FormParam("client_secret") String client_secret,
+            @FormParam("redirect_uri") String redirect_uri, @FormParam("grant_type") String grant_type) {
+        
+        
+        logger.debug("In de get accesstoken methode " + code);
         EntityManager em = getEntityManager();
-        Query query = em.createNamedQuery("Authorizationcode.findByAuthorizationcode").setParameter("authorizationcode", authorizationcode);
-        Authorizationcode code = (Authorizationcode)query.getSingleResult();
-        if (code == null) {
+        Query query = em.createNamedQuery("Authorizationcode.findByAuthorizationcode").setParameter("authorizationcode", code);
+        Authorizationcode authorizationCode = (Authorizationcode)query.getSingleResult();
+        if (authorizationCode == null) {
             throw new WebApplicationException(404);
         }
         
@@ -85,28 +91,27 @@ public class AccessTokenFacadeREST extends AbstractFacade<AccessToken> {
         logger.debug("Current date: " + formatter.format(date));
         MD5Generator generator = new MD5Generator();
         try {
-            String encryptedId = generator.generateValue(code.getUserid() + date);
-            at.setAccesstoken(encryptedId);
+            logger.debug("een waarde genereren");
+            String encryptedId = generator.generateValue(code);
+            at.setAccess_token(encryptedId);
         } catch (OAuthSystemException ex) {
             java.util.logging.Logger.getLogger(AuthorizationcodeFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        at.setClientid(code.getClientid());
+        at.setClientid(authorizationCode.getClientid());
         now.add(Calendar.YEAR, 1);
         Date future = now.getTime();
         logger.debug("Expire date: " + formatter.format(future));
         at.setCreationdate(date);
-        at.setExpires(future);
-        at.setOrganisation(code.getOrganisation());
-        at.setScope(code.getScope());
-        at.setUserid(code.getUserid());
+        at.setExpires_in(future);
+        at.setOrganisation(authorizationCode.getOrganisation());
+        at.setScope(authorizationCode.getScope());
+        at.setUserid(authorizationCode.getUserid());
         em.getTransaction().begin();
         em.persist(at);
         em.getTransaction().commit();
         em.close();
-        at.setClientid(null);
-        at.setUserid(null);
-        at.setOrganisation(null);
+        
         return at;
     }
 

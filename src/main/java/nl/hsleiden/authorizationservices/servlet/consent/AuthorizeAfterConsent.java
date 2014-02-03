@@ -41,8 +41,6 @@ public class AuthorizeAfterConsent extends HttpServlet {
 
         org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(AuthorizeAfterConsent.class.getName());
         logger.debug("In authorizeAfterConsent servlet");
-
-
         response.setContentType("text/html;charset=UTF-8");
 
         String clientId = request.getParameter("clientId");
@@ -50,11 +48,9 @@ public class AuthorizeAfterConsent extends HttpServlet {
         String state = request.getParameter("state");
         logger.debug("state: " + state);
         String code = request.getParameter("code");
-        String uri = "http://localhost:8080/AuthorizationServices/v1/authorize/" + clientId;
-
+       
         Client c = ClientBuilder.newClient().register(JacksonFeature.class);
         WebTarget queryTarget = c.target("http://localhost:8080/AuthorizationServices/v1/authorize/").path(clientId);
-
         logger.debug("Deze url wordt aangeroepen: " + queryTarget.getUri().toASCIIString());
 
         Invocation.Builder invocationBuilder = queryTarget.request(MediaType.APPLICATION_JSON_TYPE);
@@ -62,15 +58,13 @@ public class AuthorizeAfterConsent extends HttpServlet {
         String result = apiresponse.readEntity(String.class);
         
         JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(result);
-        
         String authorizationCode = jsonObject.getString("authorizationcode");
         logger.debug("Opgehaalde authorizationCode: " + authorizationCode);
         request.setAttribute("code", authorizationCode);
         String redirectUri = jsonObject.getString("redirecturi");
         logger.debug("redirect uri: " + redirectUri);
         request.getRequestDispatcher(redirectUri).forward(request, response);
-        
-    }
+     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

@@ -23,11 +23,14 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import nl.hsleiden.authorizationservices.model.Authorizationcode;
@@ -44,23 +47,34 @@ public class AuthorizationcodeFacadeREST extends AbstractFacade<Authorizationcod
     private EntityManagerFactory emf;
     private Logger logger = Logger.getLogger(AuthorizationcodeFacadeREST.class.getName());
 
+    @Context HttpServletRequest request;
+    @Context HttpServletResponse response;
+    
     public AuthorizationcodeFacadeREST() {
         super(Authorizationcode.class);
     }
-
+    
     @GET
     @Produces({"application/json"})
     public Response find(@QueryParam("clientid") String clientid, @QueryParam("state") String state, @QueryParam("scope") String scope, 
             @QueryParam("redirecturi") String redirecturi) {
         
+        // get the uid and the homeorganisation from the current user
+        // these are provided by the identityprovider and passed through the ajp protocol.
+        // they cannot be provided as queryparameters to prevent unauthorized access
+        // if not provided the null values will be added to the databaserecord
+        String uid = (String) request.getAttribute("uid");
+        String organisation = (String) request.getAttribute("homeOrganisation");
+        logger.debug("Uid: " + uid);
+        logger.debug("Organisation: " + organisation);
+        
         logger.debug("ClientId: " + clientid );
         validateClient(clientid);
         Authorizationcode code = new Authorizationcode();
-        String uid = "";
         Calendar now = Calendar.getInstance();
         code.setClientid(clientid);
         code.setUserid(uid);
-        code.setOrganisation("hsleiden.nl");
+        code.setOrganisation(organisation);
         code.setCreationdate(now.getTime());
         code.setState(state);
                
@@ -73,7 +87,6 @@ public class AuthorizationcodeFacadeREST extends AbstractFacade<Authorizationcod
         }
         now.add(Calendar.MINUTE, 5);
         code.setExpires(now.getTime());
-        //code.setRedirecturi("http://localhost:8080/WebapisClient/Employee");
         code.setRedirecturi(redirecturi);
         code.setScope("");
         

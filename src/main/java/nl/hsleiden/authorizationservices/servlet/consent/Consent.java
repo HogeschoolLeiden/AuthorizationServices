@@ -50,14 +50,16 @@ public class Consent extends HttpServlet {
         String clientId = request.getParameter("client_id");
         String state = request.getParameter("state");
         String code = request.getParameter("code");
+        String redirecturi = request.getParameter("redirecturi");
         
         logger.debug("clientId: " + clientId);
         logger.debug("state: " + state);
+        logger.debug("redirecturi: " + redirecturi);
         logger.debug("consent: " + request.getParameter("consent"));
         
         if (request.getParameter("consent") != null && request.getParameter("consent").trim().length() > 0 && request.getParameter("consent").equals("agree")) {
             URI uri = URI.create("http://localhost:8080/AuthorizationServices/v1/authorize");
-            URI newUri = UriBuilder.fromUri(uri).queryParam("clientid", clientId).queryParam("state", state).build();
+            URI newUri = UriBuilder.fromUri(uri).queryParam("clientid", clientId).queryParam("state", state).queryParam("redirecturi", redirecturi).build();
             logger.debug("De uri: " + newUri);
             response.sendRedirect(newUri.toString());
         }
@@ -76,7 +78,9 @@ public class Consent extends HttpServlet {
             out.println("<form action=\"Consent\" method=POST>");
             out.println("<input type=text name=\"client_id\" value="+ clientId +">" );            
             out.println("<input type=text name=\"state\" value="+ state +">" );
+            out.println("<input type=text name=\"redirecturi\" value="+ redirecturi +">" );
             out.println("<input type=hidden name=\"consent\" value=\"agree\">" );
+            
             out.println("<input type=submit>");
             out.println("</form>");
             out.println("</body>");

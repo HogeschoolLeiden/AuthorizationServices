@@ -49,22 +49,21 @@ public class AuthorizationcodeFacadeREST extends AbstractFacade<Authorizationcod
     }
 
     @GET
-    //@Path ("{clientid}")
     @Produces({"application/json"})
-    public Response find(@QueryParam("clientid") String clientid, @QueryParam("state") String state, @QueryParam("scope") String scope) {
+    public Response find(@QueryParam("clientid") String clientid, @QueryParam("state") String state, @QueryParam("scope") String scope, 
+            @QueryParam("redirecturi") String redirecturi) {
         
         logger.debug("ClientId: " + clientid );
         validateClient(clientid);
         Authorizationcode code = new Authorizationcode();
-        String uid = "Jacqueline";
+        String uid = "";
         Calendar now = Calendar.getInstance();
         code.setClientid(clientid);
         code.setUserid(uid);
         code.setOrganisation("hsleiden.nl");
         code.setCreationdate(now.getTime());
         code.setState(state);
-        //code.setRedirecturi("http://localhost:8080/AuthorizationServices/Consent");
-        
+               
         MD5Generator generator = new MD5Generator();
         try {
             String encryptedId = generator.generateValue(uid + now.getTime());
@@ -74,7 +73,8 @@ public class AuthorizationcodeFacadeREST extends AbstractFacade<Authorizationcod
         }
         now.add(Calendar.MINUTE, 5);
         code.setExpires(now.getTime());
-        code.setRedirecturi("http://localhost:8080/WebapisClient/Employee");
+        //code.setRedirecturi("http://localhost:8080/WebapisClient/Employee");
+        code.setRedirecturi(redirecturi);
         code.setScope("");
         
         EntityManager em = getEntityManager();
@@ -85,19 +85,17 @@ public class AuthorizationcodeFacadeREST extends AbstractFacade<Authorizationcod
         
         URI uri = URI.create(code.getRedirecturi());
         URI newUri = UriBuilder.fromUri(uri).queryParam("state", code.getState()).queryParam("code", code.getAuthorizationcode()).build();
-        logger.debug("Hier gaan we naar toe: " + newUri);
-        return Response.seeOther(newUri).build();
-        //return code;
+        logger.debug("This is where we're going: " + newUri);
+        return Response.seeOther(newUri).build();     
     }
 
     private boolean validateClient(String clientId){
         boolean valid = false;
         EntityManager em = getEntityManager();
         Query query = em.createNamedQuery("OauthClient.findByClientid").setParameter("clientid", clientId);
-        //OauthClient client = (OauthClient)query.getSingleResult();
         try {
             query.getSingleResult();
-            logger.debug("Er is een client gevonden.");
+            logger.debug("A client found.");
             valid = true;
         } catch (NoResultException nre) {
             throw new WebApplicationException("No valid client", Response.Status.FORBIDDEN);

@@ -59,9 +59,10 @@ public class AuthorizeAfterConsent extends HttpServlet {
         String state = request.getParameter("state");
         logger.debug("state: " + state);
         String code = request.getParameter("code");
+        String uri = request.getParameter("redirecturi");
        
         Client c = ClientBuilder.newClient().register(JacksonFeature.class);
-        WebTarget queryTarget = c.target("http://localhost:8080/AuthorizationServices/v1/authorize/").path(clientId);
+        WebTarget queryTarget = c.target("http://localhost:8080/AuthorizationServices/v1/authorize/").queryParam("clientid", clientId).queryParam("redirecturi", uri);
         logger.debug("Deze url wordt aangeroepen: " + queryTarget.getUri().toASCIIString());
 
         Invocation.Builder invocationBuilder = queryTarget.request(MediaType.APPLICATION_JSON_TYPE);
